@@ -1,0 +1,47 @@
+// EXAMPLE USAGE 2
+String lightStatus;
+int lightLevel = 45;
+int loopLength = 10000; // 10 second loop rotation/update
+bool morning = true;
+
+int lightStartTime = 0; // to calculate how long since the light began
+
+void setup() {
+}
+
+void loop() {
+    //replicate light increasing and decreasing over the day
+    if(lightLevel <= 44 )
+    {
+        morning = true;
+    }
+    if(lightLevel >= 70 )
+    {
+        morning = false;
+    }
+    
+    //count up light amount or down based on if its morning or not
+    if(morning)
+    {
+        lightLevel += 1;
+    }
+    else
+    {
+        lightLevel -= 1;
+    }
+    
+    //if light reaches 50 then the light is on, if it drops to 49 then light is off
+    if(morning && lightLevel == 50)
+    {
+        lightStatus = "LIGHT_ON";
+        Particle.publish("light_status", String(lightStatus));
+    }
+    else if(!morning && lightLevel == 49)
+    {
+        lightStatus = "LIGHT_OFF";
+        Particle.publish("light_status", String(lightStatus));
+    }
+    
+    Particle.publish("lightLevel", String(lightLevel));// DEBUGGING
+    delay(loopLength);// loop every "loopLength" milliseconds
+}
